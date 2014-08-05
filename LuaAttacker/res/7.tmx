@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="2" height="2" tilewidth="68" tileheight="64">
+ <tileset firstgid="1" name="gongchang" tilewidth="68" tileheight="64">
+  <image source="gongchang.png" width="340" height="576"/>
+ </tileset>
+ <layer name="bg" width="2" height="2">
+  <data encoding="base64" compression="zlib">
+   eJzjZWBg4EXCAAIYADU=
+  </data>
+ </layer>
+ <layer name="obj" width="2" height="2">
+  <data encoding="base64" compression="zlib">
+   eJxjYGBg4GZAAAAAlAAM
+  </data>
+ </layer>
+</map>
