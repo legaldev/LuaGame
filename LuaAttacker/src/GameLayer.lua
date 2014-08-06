@@ -14,7 +14,6 @@ function GameLayer:init(mapFile)
     -- add map
     local tiledMap = cc.TMXTiledMap:create(mapFile)
     local obstacleLayer = tiledMap:getLayer("obstacle");
-    print(obstacleLayer)
     tiledMap:setPosition(0, 0)
     self:addChild(tiledMap)
     

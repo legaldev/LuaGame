@@ -1,4 +1,3 @@
-
 require "Cocos2d"
 
 -- cclog
@@ -77,6 +76,79 @@ local function main()
 --    hero:setPosition(62,48)
 --    --hero:runAction(cc.RepeatForever:create(animate))
 --    layer:addChild(hero)
+    
+
+    
+    local strcut = require("struct")
+    local pack = struct.pack('<HHss', 1, 1, "user", "123456")
+    local unpack1, unpack2, unpack3, unpack4 = struct.unpack('<HHss', pack)
+    print(unpack1, unpack2, unpack3, unpack4)
+    
+    local data1 = "user".."12  3456"
+    local data2 = "12  3456"
+    local p = struct.pack('<IsI', data1:len(), data1, 12)
+    local i, s, i2 = struct.unpack('<IsI', p)
+    print('datallen '..i..' int '..i2)
+ 
+    -- test socket
+--    local socket = require("socket")
+--    print(socket._VERSION)
+--    local sock = assert(socket.connect('127.0.0.1', 2000))
+--    sock:settimeout(0)
+-- 
+--    while true do
+--        local recvt, sendt, status = socket.select({sock}, nil, 1)
+--        if #recvt > 0 then
+--            local response, receive_status = sock:receive()
+--            local i = struct.unpack('<I', response)
+--            local data = string.sub(response,5)
+--            print(i, data)
+--            break
+--        end
+--    end 
+-- 
+--    while true do 
+--        local recvt, sendt, status = socket.select(nil, {sock}, 1)
+--       
+--        if #sendt > 0 then
+--            sock:send(p)
+--            break
+--        end
+--    end
+--    
+--    while true do
+--        local recvt, sendt, status = socket.select({sock}, nil, 1)
+--        if #recvt > 0 then
+--            local response, receive_status = sock:receive()
+--            local i = struct.unpack('<I', response)
+--            local data = string.sub(response,5)
+--            print(i, data)
+--            break
+--        end
+--    end
+    
+--    while #recvt > 0 do
+--        local response, receive_status = sock:receive()
+--        print(response)
+--        do break end
+--        if receive_status ~= "closed" then
+--            if response then
+--                print(response)
+--                recvt, sendt, status = socket.select({sock}, nil, 1)
+--            end
+--        else
+--            print(rBuf)
+--            break
+--        end
+--    end
+        --local chunk, status, partial = sock:receive()
+        --print(chunk, status, partial, os.clock())
+--    until status == nil
+--    sock:close()
+--    print('closed', os.clock())
+    --do return end
+    
+    
     
     if cc.Director:getInstance():getRunningScene() then
         cc.Director:getInstance():replaceScene(gameScene)

@@ -19,6 +19,52 @@ function Hero:init()
 
     self:setPosition(62,48)
     self:runAction(cc.RepeatForever:create(animate))
+    
+    
+    -- socket
+    local strcut = require("struct")
+    self._sock = assert(require("socket").connect('127.0.0.1', 2000))
+    self._sock:settimeout(0)
+    local data1 = "user".."12  3456"
+    local data2 = "12  3456"
+    local p = struct.pack('<Is', data1:len()+1, data1)
+    while true do
+        local recvt, sendt, status = socket.select({self._sock}, nil, 1)
+        if #recvt > 0 then
+            local response, receive_status = self._sock:receive()
+            local i = strcut.unpack('<I', response)
+            local data = string.sub(response,5)
+            print(i, data)
+            break
+        end
+    end 
+    
+    
+    local count = 0
+    local mount = 100
+    function update(dt)
+        local recvt, sendt, status = socket.select(nil, {self._sock}, 0.001)
+        if #sendt > 0 and count > mount then
+            self._sock:send(p)
+            print('send', p)
+            count = 0
+        else
+            count = count + 1 
+        end
+
+        local recvt, sendt, status = socket.select({self._sock}, nil, 0.001)
+        if #recvt > 0 then
+            local response, receive_status = self._sock:receive()
+            if response then
+                print(string.format("%q", response))
+                local i = struct.unpack('<I', response)
+                local data = string.sub(response,5)
+                print(string.format("%q", data))
+                print('receive', i, data)
+            end
+        end
+    end
+    self:scheduleUpdateWithPriorityLua(update, 0)
 end
 
 function Hero:MoveByPath(path, speed)
@@ -40,5 +86,6 @@ function Hero:MoveByPath(path, speed)
     end
     self:runAction(pSequence)
 end
+
 
 return Hero
