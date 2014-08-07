@@ -30,49 +30,52 @@ function Hero:init()
     print(string.format("msg: %q", msg))
     
     -- socket
-    self._tcp = require("TCPClient").new()
-    assert(self._tcp:connectTo('127.0.0.1', 2000))
+--    self._tcp = require("TCPClient").new()
+--    assert(self._tcp:connectTo('127.0.0.1', 2000))
 
     
-    local count = 995
-    local mount = 1000
+--    local count = 0
+--    local mount = 100
     
-    function update(dt)
-        self._tcp:process()
-        local response = self._tcp:recv()
-        if response then
-            print(string.format("receive: %q", response))
-            local msgType = mypack.unpackMsgType(response)
-            if msgType == events.MSG_SC_CONFIRM then
-                local msgT, uid, result = mypack.unpackMsg(response)
-                print('uid=', uid, 'result=', result) 
-            elseif msgType == events.MSG_SC_MOVETO then
-                local msgT, uid, x, y = mypack.unpackMsg(response)
-                print('uid=', uid, 'x=', x, 'y=', y) 
-            elseif msgType == events.MSG_SC_CHAT then
-                local msgT, uid, textlen, text = mypack.unpackMsg(response)
-                print('uid=', uid, 'text=', text)
-            elseif msgType == events.MSG_SC_ADDUSER then
-                local msgT, uid, namelen, name, x, y = mypack.unpackMsg(response)
-                print('uid=', uid, 'name=', name, 'x=', x, 'y=', y)
-            elseif msgType == events.MSG_SC_DELUSER then
-                local msgT, uid = mypack.unpackMsg(response)
-                print('uid=', uid)
-            end
-        end 
-        
-        if count > mount then
-            --local msg = mypack.packCSChat("hello i am client")
-            local msg = mypack.packCSLogin("hero", "123456")
-            self._tcp:send(msg)
-            print(string.format("send: %q", msg))
-            count = 0
-        else
-            count = count + 1
-        end
-        
-    end
-    self:scheduleUpdateWithPriorityLua(update, 0)
+--    function update(dt)
+--        self._tcp:process()
+--        local response = self._tcp:recv()
+--        if response then
+--            print(string.format("receive: %q", response))
+--            local event = require("Event")
+--            local oneevent = event.create(mypack.unpackMsg(response)) 
+--            print(oneevent.uid, oneevent.result)
+--            local msgType = mypack.unpackMsgType(response)
+--            if msgType == events.MSG_SC_CONFIRM then
+--                local msgT, uid, result = mypack.unpackMsg(response)
+--                print('uid=', uid, 'result=', result) 
+--            elseif msgType == events.MSG_SC_MOVETO then
+--                local msgT, uid, x, y = mypack.unpackMsg(response)
+--                print('uid=', uid, 'x=', x, 'y=', y) 
+--            elseif msgType == events.MSG_SC_CHAT then
+--                local msgT, uid, textlen, text = mypack.unpackMsg(response)
+--                print('uid=', uid, 'text=', text)
+--            elseif msgType == events.MSG_SC_ADDUSER then
+--                local msgT, uid, namelen, name, x, y = mypack.unpackMsg(response)
+--                print('uid=', uid, 'name=', name, 'x=', x, 'y=', y)
+--            elseif msgType == events.MSG_SC_DELUSER then
+--                local msgT, uid = mypack.unpackMsg(response)
+--                print('uid=', uid)
+--            end
+--        end 
+--        
+--        if count > mount then
+--            --local msg = mypack.packCSChat("hello i am client")
+--            local msg = mypack.packCSLogin("hero", "123456")
+--            self._tcp:send(msg)
+--            print(string.format("send: %q", msg))
+--            count = 0
+--        else
+--            count = count + 1
+--        end
+--        
+--    end
+--    self:scheduleUpdateWithPriorityLua(update, 0)
     
     
     
