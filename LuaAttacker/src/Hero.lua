@@ -20,9 +20,16 @@ function Hero:init()
     self:setPosition(62,48)
     self:runAction(cc.RepeatForever:create(animate))
     
+    -- struct
+    local mypack = require("Package").new()
+    local strcut = require("struct")
+    local name = "hero"
+    local icon = 1 
+    local msg = struct.pack("<HIsi", mypack.MSG_CS_LOGIN, name:len()+1, name, icon)
+    print(string.format("msg: %q", msg))
     
     -- socket
-    local strcut = require("struct")
+    
     self._sock = assert(require("socket").connect('127.0.0.1', 2000))
     self._sock:settimeout(0)
     local data1 = "user".."12  3456"
@@ -43,24 +50,47 @@ function Hero:init()
     local count = 0
     local mount = 100
     function update(dt)
+        -- send
         local recvt, sendt, status = socket.select(nil, {self._sock}, 0.001)
         if #sendt > 0 and count > mount then
+            --p = mypack:packCSLogin("hero", "123456")
+            --p = mypack:packCSMoveTo(1,2)
+            p=mypack:packCSChat("hello i am client")
             self._sock:send(p)
-            print('send', p)
+            print(string.format("send: %q", p))
             count = 0
         else
             count = count + 1 
         end
-
+        
+        -- recv
         local recvt, sendt, status = socket.select({self._sock}, nil, 0.001)
         if #recvt > 0 then
             local response, receive_status = self._sock:receive()
             if response then
-                print(string.format("%q", response))
-                local i = struct.unpack('<I', response)
-                local data = string.sub(response,5)
-                print(string.format("%q", data))
-                print('receive', i, data)
+                print(string.format("receive: %q", response))
+                local msgType = mypack:unpackServerMsg(response)
+                local msgType = mypack:unpackMsgType(mypack:unpackPython(response))
+                if msgType == mypack.MSG_SC_CONFIRM then
+                    local msgT, uid, result = mypack:unpackServerMsg(response)
+                    print('uid=', uid, 'result=', result) 
+                elseif msgType == mypack.MSG_SC_MOVETO then
+                    local msgT, uid, x, y = mypack:unpackServerMsg(response)
+                    print('uid=', uid, 'x=', x, 'y=', y) 
+                elseif msgType == mypack.MSG_SC_CHAT then
+                    local msgT, uid, textlen, text = mypack:unpackServerMsg(response)
+                    print('uid=', uid, 'text=', text)
+                elseif msgType == mypack.MSG_SC_ADDUSER then
+                    local msgT, uid, namelen, name, x, y = mypack:unpackServerMsg(response)
+                    print('uid=', uid, 'name=', name, 'x=', x, 'y=', y)
+                elseif msgType == mypack.MSG_SC_DELUSER then
+                    local msgT, uid = mypack:unpackServerMsg(response)
+                    print('uid=', uid)
+                end
+--                local i = struct.unpack('<Is', response)
+--                local data = string.sub(response,5)
+--                print(string.format("%q", data))
+--                print('receive: %q', i, data)
             end
         end
     end
