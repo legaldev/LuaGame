@@ -32,7 +32,7 @@ end
 local package = require("Package").new()
 
 function TCPClient:send(msg)
-    if msg == nil then return end
+    if not msg then return end
     msg = package.packToPython(msg)
     self._sendQueue:pushlast(msg)
 end
@@ -44,12 +44,15 @@ function TCPClient:recv()
 end
 
 function TCPClient:process()
+    if self._status == NET_STATE.NET_STATE_STOP then
+        return
+    end
     local socket = require("socket")
     
     -- if something to send, select to send
     if not self._sendQueue:isempty()then
         local empty = self._sendQueue:isempty()
-        local recvt, sendt, status = socket.select(nil, {self._sock}, 0.001)
+        local recvt, sendt, status = socket.select(nil, {self._sock}, 0.01)
         if #sendt > 0 then
             --p = mypack:packCSLogin("hero", "123456")
             --p = mypack:packCSMoveTo(1,2)
@@ -61,7 +64,7 @@ function TCPClient:process()
     end
     
     -- select to recv
-    local recvt, sendt, status = socket.select({self._sock}, nil, 0.001)
+    local recvt, sendt, status = socket.select({self._sock}, nil, 0.01)
     if #recvt > 0 then
         local recvBuf = {}
         repeat

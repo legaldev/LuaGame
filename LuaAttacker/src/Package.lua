@@ -26,7 +26,7 @@ function Package.packEventToMsg(event)
     if event.type == events.MSG_CS_LOGIN then
         return Package.packCSLogin(event.name, event.password)
     elseif event.type == events.MSG_CS_MOVETO then
-        return Package.packCSMoveTo(event.fromx, event.formy, event.tox, event.toy)
+        return Package.packCSMoveTo(event.fromx, event.fromy, event.tox, event.toy)
     elseif event.type == events.MSG_CS_CHAT then
         return Package.packCSChat(event.text)
     end

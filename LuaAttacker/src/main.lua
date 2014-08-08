@@ -79,16 +79,16 @@ local function main()
     
 
     
-    local strcut = require("struct")
-    local pack = struct.pack('<HHss', 1, 1, "user", "123456")
-    local unpack1, unpack2, unpack3, unpack4 = struct.unpack('<HHss', pack)
-    print(unpack1, unpack2, unpack3, unpack4)
-    
-    local data1 = "user".."12  3456"
-    local data2 = "12  3456"
-    local p = struct.pack('<IsI', data1:len(), data1, 12)
-    local i, s, i2 = struct.unpack('<IsI', p)
-    print('datallen '..i..' int '..i2)
+--    local strcut = require("struct")
+--    local pack = struct.pack('<HHss', 1, 1, "user", "123456")
+--    local unpack1, unpack2, unpack3, unpack4 = struct.unpack('<HHss', pack)
+--    print(unpack1, unpack2, unpack3, unpack4)
+--    
+--    local data1 = "user".."12  3456"
+--    local data2 = "12  3456"
+--    local p = struct.pack('<IsI', data1:len(), data1, 12)
+--    local i, s, i2 = struct.unpack('<IsI', p)
+--    print('datallen '..i..' int '..i2)
  
     -- test socket
 --    local socket = require("socket")
